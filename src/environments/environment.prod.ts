@@ -7,11 +7,12 @@ export const environment = {
    * localStorage mode instead of failing at startup.
    */
   firebase: {
-    apiKey: 'YOUR_API_KEY',
-    authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_PROJECT_ID.appspot.com',
-    messagingSenderId: 'YOUR_SENDER_ID',
-    appId: 'YOUR_APP_ID',
+    apiKey: 'AIzaSyCHkF_CpZKUwo-L-sVODGTel4-GfzC_Hx4',
+    authDomain: 'serverlena.firebaseapp.com',
+    projectId: 'serverlena',
+    storageBucket: 'serverlena.firebasestorage.app',
+    messagingSenderId: '222955201733',
+    appId: '1:222955201733:web:8199a7e0422c10d8a47cac',
+    measurementId: 'G-KX52PX01BD',
   },
 };
