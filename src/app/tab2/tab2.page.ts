@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
@@ -21,6 +21,7 @@ type CategoryFilter = 'All' | MenuCategory;
 })
 export class Tab2Page implements OnInit, OnDestroy {
   private readonly menuItems = inject(MenuItemService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly categories: CategoryFilter[] = ['All', ...MENU_CATEGORIES];
 
@@ -48,6 +49,8 @@ export class Tab2Page implements OnInit, OnDestroy {
     this.subscription = this.menuItems.items$.subscribe((items) => {
       this.allItems = items;
       this.applyFilter();
+      // Firestore snapshots arrive outside Angular's scheduler (zoneless).
+      this.cdr.markForCheck();
     });
   }
 
@@ -139,6 +142,7 @@ export class Tab2Page implements OnInit, OnDestroy {
       this.showToast('Could not update the item.', 'danger');
     } finally {
       this.isBusy = false;
+      this.cdr.markForCheck();
     }
   }
 
@@ -156,6 +160,7 @@ export class Tab2Page implements OnInit, OnDestroy {
       this.showToast('Could not delete the item.', 'danger');
     } finally {
       this.isBusy = false;
+      this.cdr.markForCheck();
     }
   }
 

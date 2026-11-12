@@ -39,7 +39,8 @@ async function shot(name) {
 }
 
 try {
-  await page.goto(BASE_URL, { waitUntil: 'networkidle' });
+  // Firestore keeps a long-lived stream open, so `networkidle` never fires.
+  await page.goto(BASE_URL, { waitUntil: 'load' });
   await page.locator('app-tab1').waitFor();
   await page.waitForTimeout(800);
   await shot('01-add-form.png');

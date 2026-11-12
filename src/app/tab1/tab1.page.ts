@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -21,6 +21,7 @@ import {
 export class Tab1Page {
   private readonly menuItems = inject(MenuItemService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly categories = MENU_CATEGORIES;
 
@@ -90,6 +91,8 @@ export class Tab1Page {
       );
     } finally {
       this.isSaving = false;
+      // The app is zoneless; async state changes need an explicit CD signal.
+      this.cdr.markForCheck();
     }
   }
 
