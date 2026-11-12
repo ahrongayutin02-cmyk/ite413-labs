@@ -1,24 +1,25 @@
 # Lab 6 — Docker runbook
 
-This is the exact sequence to finish and verify the container lab on this
-machine. The application code, `Dockerfile`, and CI/CD workflow are already
-committed; the remaining work is the local Docker runtime.
+This is the exact sequence used to finish and verify the container lab on this
+machine. The application code, `Dockerfile`, and CI/CD workflow are committed,
+and the local Docker runtime has been verified.
 
 ## Current machine status (13 Nov 2026)
 
 | Item | Status |
 |---|---|
 | `VirtualMachinePlatform` | Enabled |
-| `Microsoft-Windows-Subsystem-Linux` | Enabled on 13 Nov 2026 — **reboot required** |
-| WSL2 kernel / distro | Starts after the reboot |
-| Docker Desktop 4.99.0 | Installed on 13 Nov 2026 (installer exit code 0) |
-| Free disk space | 5.79 GB |
-| Next action | Reboot Windows, then run `scripts\verify-docker.cmd -SmokeTest` |
+| `Microsoft-Windows-Subsystem-Linux` | Enabled and active after the 13 Nov 2026 reboot |
+| WSL2 kernel / distro | Active (`Default Version: 2`) |
+| Docker Desktop 4.99.0 | Installed and verified on 13 Nov 2026 |
+| Free disk space | 6.89 GB |
+| Next action | Completed: image built, container healthy, CRUD smoke test passed |
 
-The Docker Desktop installer has already run successfully and was deleted to
-recover 624 MB. `C:\Program Files\Docker\Docker\Docker Desktop.exe` exists and
-the `com.docker.service` service is registered. WSL2 still needs the reboot
-before the Linux engine can start.
+The Docker Desktop installer ran successfully and was deleted to recover
+624 MB. `C:\Program Files\Docker\Docker\Docker Desktop.exe` exists and the
+`com.docker.service` service is registered. WSL2 was activated by the reboot on
+13 Nov 2026; the engine is running and the Lab 6 container was verified (see
+[`LAB6-DOCKER-EVIDENCE.md`](LAB6-DOCKER-EVIDENCE.md)).
 
 If Docker Desktop ever needs to be reinstalled, download the current installer
 from <https://www.docker.com/products/docker-desktop/> and run it elevated:
@@ -30,6 +31,10 @@ Start-Process "$env:TEMP\DockerDesktopInstaller.exe" `
 ```
 
 ## 1. Reboot Windows
+
+> **Completed 13 Nov 2026.** `wsl --status` now reports `Default Version: 2`
+> without the virtualization warning. The steps below are kept for reference or
+> for a future machine.
 
 WSL2 cannot start until the optional feature is active. Save your work and
 restart the machine. After signing back in:
@@ -105,15 +110,15 @@ docker image inspect ionic-crud --format "ID={{.Id}} Size={{.Size}}"
 | Field | Value |
 |---|---|
 | Image name / tag | `ionic-crud:latest` |
-| Image ID | |
-| Image size (bytes / MB) | |
+| Image ID | `sha256:76354fb7b178f7c913f72d09c609d4acf1f7ac30457312563b3dbf3a76429c12` |
+| Image size (bytes / MB) | 1,691,417,380 bytes / 1.69 GB disk usage (378 MB content) |
 | Container name | `ionic-crud-container` |
-| Container ID | |
+| Container ID | `13d0458f8317a4649c6257122df8604d5c5e020aa58bb6d9466371f5aea44da2` |
 | Host port → container port | `8100 → 8100` |
-| Container status | |
-| Health status | |
-| `docker build` duration | |
-| `docker run` / first response duration | |
+| Container status | `Up (healthy)` |
+| Health status | `healthy` (5 consecutive exit 0) |
+| `docker build` duration | ~16 minutes (cold build) |
+| `docker run` / first response duration | ~65 seconds to healthy |
 
 Screenshots to add to the submission:
 
@@ -122,6 +127,12 @@ Screenshots to add to the submission:
 3. Terminal showing `docker ps` with the port mapping.
 4. Browser at <http://localhost:8100> with the app loaded.
 5. The CRUD flow inside the container (add, edit, delete).
+
+Captured: `docs/screenshots/10-docker-containers.png` shows the Docker Desktop
+**Containers** view with `ionic-crud-container`, image `ionic-crud`, and port
+`8100:8100`. The terminal values are recorded verbatim in
+[`LAB6-DOCKER-EVIDENCE.md`](LAB6-DOCKER-EVIDENCE.md); items 2–3 can be
+screenshotted from those commands if the instructor requires an image.
 
 ## 5. Container lifecycle commands
 

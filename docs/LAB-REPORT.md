@@ -150,10 +150,33 @@ Open <http://localhost:8100>. Record the image name, tag, image id, and size fro
 screenshot checklist, and troubleshooting steps are in
 [`DOCKER-RUNBOOK.md`](DOCKER-RUNBOOK.md).
 
-> **Verification status:** Docker Desktop 4.99.0 is installed and the Dockerfile
-> and helper script are committed and reviewed. The local build/run is the
-> remaining step after the required WSL2 reboot; run
-> `scripts\verify-docker.cmd -SmokeTest` and attach the resulting screenshots.
+#### Verified result (13 Nov 2026)
+
+After the WSL2 reboot, `scripts\verify-docker.ps1 -SkipBuild -SmokeTest` was run
+against the image built by the first `docker build`. The container started,
+became healthy, and the browser CRUD smoke test passed against
+<http://localhost:8100>.
+
+| Field | Value |
+|---|---|
+| Docker Desktop / engine | 4.99.0 / 29.9.3 |
+| Image name / tag | `ionic-crud:latest` |
+| Image ID | `sha256:76354fb7b178f7c913f72d09c609d4acf1f7ac30457312563b3dbf3a76429c12` |
+| Image size | 1,691,417,380 bytes (1.69 GB disk usage; 378 MB content) |
+| Container name | `ionic-crud-container` |
+| Container ID | `13d0458f8317a4649c6257122df8604d5c5e020aa58bb6d9466371f5aea44da2` |
+| Host port → container port | `8100 → 8100` |
+| Container status | `Up (healthy)` |
+| Health checks | 5 consecutive checks with exit code 0 |
+| Build duration | ~16 minutes (cold build; `npm ci` took ~9 minutes) |
+| Start to healthy | ~65 seconds |
+| HTTP check | `200 OK` |
+| CRUD smoke test | Passed (create, read, search, update, delete) |
+
+The exact captured command output is in
+[`LAB6-DOCKER-EVIDENCE.md`](LAB6-DOCKER-EVIDENCE.md). The Docker Desktop
+Containers view is captured in
+[`docs/screenshots/10-docker-containers.png`](screenshots/10-docker-containers.png).
 
 ### 2.3 Container management
 

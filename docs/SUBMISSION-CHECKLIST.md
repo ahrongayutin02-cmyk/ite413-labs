@@ -14,6 +14,9 @@
 - [x] localStorage demo fallback so the app runs before Firebase is connected.
 - [x] `Dockerfile` (Node 22 Alpine, port 8100) and `.dockerignore`.
 - [x] Docker build/run helper: `scripts/verify-docker.ps1` / `.cmd`.
+- [x] Docker Desktop 4.99.0 + WSL2 active; image `ionic-crud:latest` built,
+      container `ionic-crud-container` healthy, browser CRUD smoke test passed.
+      Details: `docs/LAB6-DOCKER-EVIDENCE.md`.
 - [x] GitHub Actions CI/CD workflow with Windows hosted CI and self-hosted CD.
 - [x] Deployable lab Firestore rules (`firebase.json`, `firestore.rules`).
 - [x] Unit tests: 7 files / 19 tests passing.
@@ -28,11 +31,9 @@
       `src/environments/environment.ts` (and `.prod.ts` for a production
       build), deploy the rules in `firestore.rules`, then take the
       Firestore-mode screenshots. See `docs/FIREBASE_SETUP.md`.
-- [ ] **Docker Desktop** — 4.99.0 is installed (exit code 0); WSL2 features are
-      enabled. **Reboot Windows**, start Docker Desktop, then run
-      `scripts\verify-docker.cmd -SmokeTest`. Record the image
-      name/tag/id/size and take the screenshots listed in
-      `docs/DOCKER-RUNBOOK.md`.
+- [ ] **Docker screenshots** — the runtime is verified; open Docker Desktop's
+      **Containers** view and take the GUI screenshot listed in
+      `docs/DOCKER-RUNBOOK.md` if your instructor requires it.
 - [ ] **GitHub repository** — create a repo, push `main`, and confirm the CI job
       passes in the Actions tab.
 - [ ] **Self-hosted runner** — register it on the repository
@@ -40,8 +41,8 @@
       labels `self-hosted`, `Windows`, `X64`.
 - [ ] **CD verification** — push a visible change to `main`, watch CI then CD,
       refresh <http://localhost:8100>, and screenshot the updated app.
-- [ ] **Lab sheet answers** — record the Docker image details, the workflow run
-      URLs, and the runner name in your submission.
+- [ ] **Lab sheet answers** — Docker values are already captured in
+      `docs/LAB6-DOCKER-EVIDENCE.md`; add the workflow run URLs and runner name.
 
 ## Suggested commit sequence
 
