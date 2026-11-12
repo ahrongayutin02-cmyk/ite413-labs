@@ -220,10 +220,10 @@ startup errors.
 1. Checkout latest code.
 2. `docker info` (fails fast if Docker Desktop is not running).
 3. `docker build -t ionic-crud .`
-4. `docker rm -f ionic-crud` (allowed to fail on the first run).
-5. `docker run -d --name ionic-crud --restart unless-stopped -p 8100:8100 ionic-crud`
+4. `docker rm -f ionic-crud ionic-crud-container` (allowed to fail on the first run).
+5. `docker run -d --name ionic-crud-container --restart unless-stopped -p 8100:8100 ionic-crud`
 6. Poll `http://localhost:8100/` for up to 60 seconds; on failure print
-   `docker logs ionic-crud` and fail the job.
+   `docker logs ionic-crud-container` and fail the job.
 
 The CD job only runs after CI succeeds and only for a push to `main`.
 
