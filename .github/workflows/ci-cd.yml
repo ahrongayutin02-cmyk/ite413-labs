@@ -66,17 +66,20 @@ jobs:
       - name: Verify app
         shell: pwsh
         run: |
-          $success = $false
-          for ($i = 1; $i -le 20; $i++) {
-            try {
-              Invoke-WebRequest -Uri http://localhost:8100/ -UseBasicParsing -TimeoutSec 5 | Out-Null
-              $success = $true
+          $healthy = $false
+          for ($i = 1; $i -le 60; $i++) {
+            $status = docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' ionic-crud-container 2>$null
+            if ($status -eq 'healthy') {
+              $healthy = $true
               break
-            } catch {
-              Start-Sleep -Seconds 3
             }
+            Write-Host "waiting for container health ($i/60): $status"
+            Start-Sleep -Seconds 5
           }
-          if (-not $success) {
+          if (-not $healthy) {
+            docker ps -a
             docker logs ionic-crud-container
             exit 1
           }
+          $response = Invoke-WebRequest -Uri http://localhost:8100/ -UseBasicParsing -TimeoutSec 10
+          Write-Host "HTTP $($response.StatusCode) - deployment verified"
