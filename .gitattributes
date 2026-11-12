@@ -1,0 +1,15 @@
+# Keep the Dockerfile and Linux-facing files LF even when the repository is
+# checked out on Windows. A CRLF after the HEALTHCHECK line continuation would
+# break the Docker build.
+* text=auto
+Dockerfile text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.ts text eol=lf
+*.html text eol=lf
+*.scss text eol=lf
+*.md text eol=lf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf

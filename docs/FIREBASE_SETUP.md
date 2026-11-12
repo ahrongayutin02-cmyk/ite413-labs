@@ -54,7 +54,16 @@ service cloud.firestore {
 }
 ```
 
-Paste them into **Firestore → Rules → Publish**.
+The same rules are committed in [`firestore.rules`](../firestore.rules) with
+[`firebase.json`](../firebase.json), so you can deploy them instead of pasting:
+
+```bash
+npx firebase-tools login
+npx firebase-tools use --add          # select the project, alias it "default"
+npx firebase-tools deploy --only firestore:rules
+```
+
+Or paste them into **Firestore → Rules → Publish**.
 
 > **Never use `allow read, write: if true` in production.** It lets anyone who
 > finds the project id read, edit, and delete every menu item. For a real app,

@@ -6,6 +6,10 @@ FROM node:22-alpine
 # Set the working directory inside the container.
 WORKDIR /app
 
+# Keep CLI first-run prompts out of the container logs.
+ENV NG_CLI_ANALYTICS=false \
+    IONIC_CLI_TELEMETRY=false
+
 # Install the Ionic CLI globally (required by the CMD below).
 RUN npm install -g @ionic/cli@latest
 
@@ -13,7 +17,7 @@ RUN npm install -g @ionic/cli@latest
 COPY package.json package-lock.json ./
 
 # Install the exact dependency tree from the lockfile.
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 
 # Copy the remaining project files.
 COPY . .
@@ -26,4 +30,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=5 \
   CMD wget -qO- http://127.0.0.1:8100/ > /dev/null || exit 1
 
 # Bind to all interfaces so the port mapping works, and never open a browser.
-CMD ["ionic", "serve", "--host=0.0.0.0", "--port=8100", "--no-open"]
+CMD ["ionic", "serve", "--host=0.0.0.0", "--port=8100", "--no-open", "--no-interactive"]

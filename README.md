@@ -75,6 +75,17 @@ Full steps, including the lab-only Firestore rules, are in
 
 ## Lab 6 — Docker
 
+The fastest path is the verification script, which builds the image, replaces
+the old container, waits for the dev server, and prints the values needed for
+the lab sheet:
+
+```powershell
+scripts\verify-docker.cmd
+# or: scripts\verify-docker.cmd -SmokeTest
+```
+
+Manual commands:
+
 ```bash
 docker build -t ionic-crud .
 docker images
@@ -82,7 +93,11 @@ docker run -d --name ionic-crud-container -p 8100:8100 ionic-crud
 docker ps
 ```
 
-Open <http://localhost:8100>. Then manage the container:
+Open <http://localhost:8100>. The first request can take 1–2 minutes while
+Angular compiles. See [`docs/DOCKER-RUNBOOK.md`](docs/DOCKER-RUNBOOK.md) for
+the WSL2/Docker Desktop setup, screenshot checklist, and troubleshooting.
+
+Then manage the container:
 
 ```bash
 docker stop ionic-crud-container
@@ -93,8 +108,10 @@ docker images          # the image is still there
 ```
 
 The image is based on `node:22-alpine`, installs `@ionic/cli`, runs `npm ci`,
-exposes port 8100, and starts `ionic serve --host=0.0.0.0 --port=8100 --no-open`.
-The `HEALTHCHECK` waits up to two minutes for the Angular dev server to compile.
+exposes port 8100, and starts
+`ionic serve --host=0.0.0.0 --port=8100 --no-open --no-interactive`. CLI
+analytics/telemetry are disabled so the container never waits for a prompt. The
+`HEALTHCHECK` waits up to two minutes for the Angular dev server to compile.
 
 ## CI/CD — GitHub Actions
 
@@ -126,6 +143,9 @@ The runner machine needs Docker Desktop running and the labels `self-hosted`,
 - `npm run e2e:smoke` — real Chrome flow: create, search, update, delete,
   About tab, desktop layout. Screenshots are in
   [`docs/screenshots/`](docs/screenshots/).
+- Docker build/run — prepared and scripted in `scripts/verify-docker.ps1`; the
+  local verification is the remaining step after the required WSL2 reboot. See
+  [`docs/DOCKER-RUNBOOK.md`](docs/DOCKER-RUNBOOK.md).
 
 ## Project structure
 
@@ -138,9 +158,11 @@ src/app/
   tab2/                            Read + search/filter + Update + Delete
   tab3/                            About, backend status, data tools
 Dockerfile                         Lab 6 image
+firebase.json / firestore.rules    deployable lab Firestore rules
 .github/workflows/ci-cd.yml        CI/CD pipeline
-docs/                              Firebase setup, lab report, screenshots
+docs/                              Firebase setup, Docker runbook, lab report
 scripts/e2e-smoke.mjs              Playwright browser smoke test
+scripts/verify-docker.ps1          Build/run/verify helper for Lab 6
 ```
 
 ## Troubleshooting
@@ -153,3 +175,5 @@ scripts/e2e-smoke.mjs              Playwright browser smoke test
 | Port 8100 already in use | Stop the other dev server/container: `docker rm -f ionic-crud-container` or change the port in `package.json` and the workflow. |
 | Runner stays queued | Start `.\run.cmd`; confirm the runner is Idle and its labels match `[self-hosted, Windows, X64]`. |
 | CD cannot find Docker | Start Docker Desktop on the runner machine and confirm `docker info` works in the same shell. |
+| `wsl --status` says virtualization is not enabled | Reboot after enabling the WSL feature, then check Task Manager → CPU → Virtualization. See `docs/DOCKER-RUNBOOK.md`. |
+| Docker Desktop download is very slow | It is a 595 MB installer; resume with `curl -C -` as shown in the runbook. |

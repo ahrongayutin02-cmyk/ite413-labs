@@ -116,19 +116,27 @@ The image follows the manual's Node 22 Alpine approach:
 ```dockerfile
 FROM node:22-alpine
 WORKDIR /app
+ENV NG_CLI_ANALYTICS=false IONIC_CLI_TELEMETRY=false
 RUN npm install -g @ionic/cli@latest
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 COPY . .
 EXPOSE 8100
 HEALTHCHECK ... wget http://127.0.0.1:8100/
-CMD ["ionic", "serve", "--host=0.0.0.0", "--port=8100", "--no-open"]
+CMD ["ionic", "serve", "--host=0.0.0.0", "--port=8100", "--no-open", "--no-interactive"]
 ```
 
 `.dockerignore` excludes `node_modules`, `.git`, `.angular`, `www`, coverage,
 environment files, docs, and scripts from the build context.
 
 ### 2.2 Build and run
+
+```powershell
+scripts\verify-docker.cmd          # build + run + wait + print image details
+scripts\verify-docker.cmd -SmokeTest
+```
+
+Manual equivalent:
 
 ```bash
 docker build -t ionic-crud .
@@ -138,7 +146,13 @@ docker ps
 ```
 
 Open <http://localhost:8100>. Record the image name, tag, image id, and size from
-`docker images` for the lab sheet.
+`docker images` for the lab sheet. The complete WSL2/Docker Desktop setup,
+screenshot checklist, and troubleshooting steps are in
+[`DOCKER-RUNBOOK.md`](DOCKER-RUNBOOK.md).
+
+> **Verification status:** the Dockerfile and helper script are committed and
+> reviewed. The local build/run is the remaining step after the required WSL2
+> reboot; run `scripts\verify-docker.cmd` and attach the resulting screenshots.
 
 ### 2.3 Container management
 

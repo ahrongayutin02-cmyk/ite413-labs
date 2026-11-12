@@ -13,22 +13,26 @@
       `addDoc`, `updateDoc`, `deleteDoc`).
 - [x] localStorage demo fallback so the app runs before Firebase is connected.
 - [x] `Dockerfile` (Node 22 Alpine, port 8100) and `.dockerignore`.
+- [x] Docker build/run helper: `scripts/verify-docker.ps1` / `.cmd`.
 - [x] GitHub Actions CI/CD workflow with Windows hosted CI and self-hosted CD.
+- [x] Deployable lab Firestore rules (`firebase.json`, `firestore.rules`).
 - [x] Unit tests: 7 files / 18 tests passing.
 - [x] Lint passing.
 - [x] Production build passing.
 - [x] Real-browser CRUD smoke test passing, with screenshots in `docs/screenshots/`.
-- [x] Lab report and Firebase setup guide.
+- [x] Lab report, Firebase setup guide, and Docker runbook.
 
 ## Needs your account / machine (cannot be completed by an agent)
 
 - [ ] **Firebase project** — create it, paste the web config into
-      `src/environments/environment.ts`, publish the lab rules, then take the
+      `src/environments/environment.ts` (and `.prod.ts` for a production
+      build), deploy the rules in `firestore.rules`, then take the
       Firestore-mode screenshots. See `docs/FIREBASE_SETUP.md`.
-- [ ] **Docker Desktop** — install/start it, then run:
-      `docker build -t ionic-crud .`
-      `docker run -d --name ionic-crud-container -p 8100:8100 ionic-crud`
-      Record the image name/tag/id/size for the Lab 6 sheet.
+- [ ] **Docker Desktop** — WSL2 features are enabled and the installer is
+      downloading; **reboot Windows**, start Docker Desktop, then run
+      `scripts\verify-docker.cmd -SmokeTest`. Record the image
+      name/tag/id/size and take the screenshots listed in
+      `docs/DOCKER-RUNBOOK.md`.
 - [ ] **GitHub repository** — create a repo, push `main`, and confirm the CI job
       passes in the Actions tab.
 - [ ] **Self-hosted runner** — register it on the repository
