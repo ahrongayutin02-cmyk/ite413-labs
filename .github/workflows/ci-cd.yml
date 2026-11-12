@@ -57,11 +57,11 @@ jobs:
         run: docker build -t ionic-crud .
 
       - name: Remove previous container
-        run: docker rm -f ionic-crud
+        run: docker rm -f ionic-crud ionic-crud-container
         continue-on-error: true
 
       - name: Start updated container
-        run: docker run -d --name ionic-crud --restart unless-stopped -p 8100:8100 ionic-crud
+        run: docker run -d --name ionic-crud-container --restart unless-stopped -p 8100:8100 ionic-crud
 
       - name: Verify app
         shell: pwsh
@@ -77,6 +77,6 @@ jobs:
             }
           }
           if (-not $success) {
-            docker logs ionic-crud
+            docker logs ionic-crud-container
             exit 1
           }

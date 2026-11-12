@@ -121,7 +121,8 @@ The workflow has two jobs:
    checkout → Node 24 → `npm ci` → lint → unit tests → production build.
 2. **Continuous Deployment** on `[self-hosted, Windows, X64]`:
    checkout → `docker info` → `docker build -t ionic-crud .` → remove the old
-   container → run the new one on port 8100 → poll `http://localhost:8100/`.
+   `ionic-crud`/`ionic-crud-container` container → run the new one as
+   `ionic-crud-container` on port 8100 → poll `http://localhost:8100/`.
 
 ### Register the self-hosted runner
 
@@ -143,9 +144,10 @@ The runner machine needs Docker Desktop running and the labels `self-hosted`,
 - `npm run e2e:smoke` — real Chrome flow: create, search, update, delete,
   About tab, desktop layout. Screenshots are in
   [`docs/screenshots/`](docs/screenshots/).
-- Docker build/run — prepared and scripted in `scripts/verify-docker.ps1`; the
-  local verification is the remaining step after the required WSL2 reboot. See
-  [`docs/DOCKER-RUNBOOK.md`](docs/DOCKER-RUNBOOK.md).
+- Docker build/run — Docker Desktop 4.99.0 + WSL2; image `ionic-crud:latest`
+  (1,691,417,380 bytes), container `ionic-crud-container` healthy on
+  `8100:8100`, and the browser CRUD smoke test passed against the container.
+  See [`docs/LAB6-DOCKER-EVIDENCE.md`](docs/LAB6-DOCKER-EVIDENCE.md).
 
 ## Project structure
 
@@ -176,4 +178,4 @@ scripts/verify-docker.ps1          Build/run/verify helper for Lab 6
 | Runner stays queued | Start `.\run.cmd`; confirm the runner is Idle and its labels match `[self-hosted, Windows, X64]`. |
 | CD cannot find Docker | Start Docker Desktop on the runner machine and confirm `docker info` works in the same shell. |
 | `wsl --status` says virtualization is not enabled | Reboot after enabling the WSL feature, then check Task Manager → CPU → Virtualization. See `docs/DOCKER-RUNBOOK.md`. |
-| Docker Desktop download is very slow | It is a 595 MB installer; resume with `curl -C -` as shown in the runbook. |
+| Docker Desktop installer exits with code 1 | Check `%LOCALAPPDATA%\Docker\log\host\DockerDesktopInstaller-*.log`. The installer needs 3.27 GB free; free space and rerun elevated. |
