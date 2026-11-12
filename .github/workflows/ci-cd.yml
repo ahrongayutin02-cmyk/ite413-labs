@@ -64,7 +64,7 @@ jobs:
         run: docker run -d --name ionic-crud-container --restart unless-stopped -p 8100:8100 ionic-crud
 
       - name: Verify app
-        shell: pwsh
+        shell: powershell
         run: |
           $healthy = $false
           for ($i = 1; $i -le 60; $i++) {
