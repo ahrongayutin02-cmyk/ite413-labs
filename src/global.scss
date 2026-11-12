@@ -1,0 +1,95 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Shared page layout for the lab screens. */
+ion-content {
+  --background: #f4f7f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background: #0b1220;
+  }
+}
+
+.page-shell {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 6px 4px 36px;
+}
+
+.hero {
+  padding: 10px 4px 16px;
+}
+
+.hero .eyebrow {
+  margin: 0 0 6px;
+  color: var(--ion-color-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.hero .lede {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+ion-card {
+  margin-inline: 0;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+}
+
+ion-card-title {
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+

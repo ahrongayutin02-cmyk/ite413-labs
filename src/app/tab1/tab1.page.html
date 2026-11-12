@@ -1,0 +1,153 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Add item</ion-title>
+    <ion-buttons slot="end">
+      <ion-chip outline="true" color="medium" class="backend-chip">
+        <ion-icon name="server-outline"></ion-icon>
+        <ion-label>{{ backend === 'firebase' ? 'Firestore' : 'Local demo' }}</ion-label>
+      </ion-chip>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">Lab 4 · Create</p>
+      <h1>Add a menu item</h1>
+      <p class="lede">
+        Create a record in the <code>menuItems</code> collection. All fields are
+        validated before the write.
+      </p>
+    </section>
+
+    <ion-card class="form-card">
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-input
+              data-testid="item-name"
+              label="Name"
+              labelPlacement="stacked"
+              fill="outline"
+              placeholder="e.g. Chicken Adobo"
+              [(ngModel)]="form.name"
+              [class.ion-invalid]="!!nameError"
+              [class.ion-touched]="submitted"
+            ></ion-input>
+          </ion-item>
+          @if (nameError) {
+            <ion-note color="danger">{{ nameError }}</ion-note>
+          }
+
+          <ion-item>
+            <ion-select
+              data-testid="item-category"
+              label="Category"
+              labelPlacement="stacked"
+              fill="outline"
+              interface="popover"
+              [(ngModel)]="form.category"
+            >
+              @for (category of categories; track category) {
+                <ion-select-option [value]="category">
+                  {{ category }}
+                </ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-input
+              data-testid="item-price"
+              label="Price (PHP)"
+              labelPlacement="stacked"
+              fill="outline"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              placeholder="0.00"
+              [(ngModel)]="form.price"
+              [class.ion-invalid]="!!priceError"
+              [class.ion-touched]="submitted"
+            ></ion-input>
+          </ion-item>
+          @if (priceError) {
+            <ion-note color="danger">{{ priceError }}</ion-note>
+          }
+
+          <ion-item>
+            <ion-textarea
+              data-testid="item-description"
+              label="Description"
+              labelPlacement="stacked"
+              fill="outline"
+              placeholder="Short description shown in the list"
+              [autoGrow]="true"
+              [rows]="3"
+              [(ngModel)]="form.description"
+            ></ion-textarea>
+          </ion-item>
+
+          <ion-item class="toggle-row">
+            <ion-toggle
+              data-testid="item-available"
+              labelPlacement="start"
+              [(ngModel)]="form.available"
+            >
+              Available today
+            </ion-toggle>
+          </ion-item>
+        </ion-list>
+
+        <ion-button
+          expand="block"
+          class="save-button"
+          data-testid="save-item"
+          [disabled]="isSaving"
+          (click)="save()"
+        >
+          <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+          Add item
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="clear"
+          data-testid="view-items"
+          (click)="viewItems()"
+        >
+          View items
+          <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="hint-card">
+      <ion-card-content>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <p>
+          The data model is <strong>MenuItem</strong>:
+          <code>name</code>, <code>category</code>, <code>price</code>,
+          <code>description</code>, <code>available</code>, and
+          <code>createdAt</code>.
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [color]="toastColor"
+    [duration]="2600"
+    position="bottom"
+    (didDismiss)="isToastOpen = false"
+  ></ion-toast>
+
+  <ion-loading
+    [isOpen]="isSaving"
+    message="Saving item..."
+    spinner="crescent"
+  ></ion-loading>
+</ion-content>

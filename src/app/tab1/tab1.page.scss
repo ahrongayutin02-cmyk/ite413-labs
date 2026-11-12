@@ -1,0 +1,63 @@
+.backend-chip {
+  margin-inline-end: 8px;
+  font-size: 0.72rem;
+}
+
+.form-card,
+.hint-card {
+  border-radius: 18px;
+}
+
+.form-card ion-list {
+  background: transparent;
+}
+
+.form-card ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 6px;
+  /* The outline label floats on the field border; give it room and do not
+     let the item box clip the top half of the text. */
+  padding-top: 10px;
+  overflow: visible;
+}
+
+.form-card ion-note {
+  display: block;
+  padding: 2px 4px 10px;
+  font-size: 0.78rem;
+}
+
+.toggle-row {
+  margin-top: 4px;
+}
+
+.save-button {
+  margin-top: 18px;
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+}
+
+.hint-card ion-card-content {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: var(--ion-color-medium);
+  font-size: 0.86rem;
+}
+
+.hint-card ion-icon {
+  flex: 0 0 auto;
+  font-size: 1.2rem;
+  margin-top: 2px;
+}
+
+.hint-card p {
+  margin: 0;
+}
+
+code {
+  font-size: 0.82em;
+}

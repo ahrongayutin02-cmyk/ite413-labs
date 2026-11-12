@@ -1,0 +1,161 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>About this lab</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">ITE 413 · Integrative Programming and Technologies 2</p>
+      <h1>Menu CRUD lab</h1>
+      <p class="lede">
+        Lab 4 CRUD enhancement, Lab 6 containerization, and the CI/CD pipeline
+        all run against this one Ionic Angular project.
+      </p>
+    </section>
+
+    <ion-card class="status-card">
+      <ion-card-content>
+        <div class="status-line">
+          <ion-icon
+            [name]="backend === 'firebase' ? 'flame-outline' : 'save-outline'"
+            [color]="backend === 'firebase' ? 'warning' : 'primary'"
+          ></ion-icon>
+          <div>
+            <h2>{{ backend === 'firebase' ? 'Firebase Firestore' : 'Local demo mode' }}</h2>
+            <p>{{ backendDetail }}</p>
+          </div>
+        </div>
+        @if (backend === 'local') {
+          <ion-note color="medium">
+            Paste your Firebase web config into
+            <code>src/environments/environment.ts</code> to switch to Firestore.
+            The CRUD code path is already wired.
+          </ion-note>
+        } @else {
+          <ion-note color="success">
+            Reads are live through <code>onSnapshot</code>; writes go straight to
+            the <code>menuItems</code> collection.
+          </ion-note>
+        }
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>What is implemented</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none" class="check-list">
+          <ion-item>
+            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
+            <ion-label>
+              <h3>Create</h3>
+              <p>Validated form on Tab 1 writes to <code>menuItems</code>.</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
+            <ion-label>
+              <h3>Read</h3>
+              <p>Live list on Tab 2 with search and category segments.</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
+            <ion-label>
+              <h3>Update</h3>
+              <p>Modal editor with the same validation rules.</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
+            <ion-label>
+              <h3>Delete</h3>
+              <p>Swipe an item left, or clear all from this tab.</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon slot="start" name="checkmark-circle" color="success"></ion-icon>
+            <ion-label>
+              <h3>Ionic UI</h3>
+              <p>
+                Searchbar, segment, modal, toast, loading, refresher, sliding
+                options, and empty state.
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Lab deliverables</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="deliverables">
+        <div class="deliverable">
+          <span class="tag">Lab 4</span>
+          <p>Ionic Tabs CRUD with a custom <strong>MenuItem</strong> model and Firebase integration.</p>
+        </div>
+        <div class="deliverable">
+          <span class="tag">Lab 6</span>
+          <p><code>Dockerfile</code> and <code>.dockerignore</code> for the Node 22 Alpine image on port 8100.</p>
+        </div>
+        <div class="deliverable">
+          <span class="tag">CI/CD</span>
+          <p>GitHub Actions workflow: CI on <code>windows-latest</code>, deployment on a self-hosted Windows runner.</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="tools-card">
+      <ion-card-header>
+        <ion-card-title>Data tools</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="tool-copy">
+          {{ itemCount$ | async }} item(s) currently stored.
+        </p>
+        <ion-button
+          expand="block"
+          fill="outline"
+          data-testid="reset-demo"
+          [disabled]="backend === 'firebase' || isBusy"
+          (click)="resetDemoData()"
+        >
+          Restore demo rows
+        </ion-button>
+        <ion-button
+          expand="block"
+          color="danger"
+          fill="outline"
+          data-testid="clear-all"
+          [disabled]="isBusy"
+          (click)="confirmClear()"
+        >
+          Delete all items
+        </ion-button>
+        <ion-note color="medium">
+          "Restore demo rows" is local-only. In Firebase mode, add items through
+          Tab 1 so the writes go through your Firestore rules.
+        </ion-note>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [duration]="2200"
+    position="bottom"
+    (didDismiss)="isToastOpen = false"
+  ></ion-toast>
+
+  <ion-loading
+    [isOpen]="isBusy"
+    message="Working..."
+    spinner="crescent"
+  ></ion-loading>
+</ion-content>

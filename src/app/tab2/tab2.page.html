@@ -1,0 +1,236 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Menu items</ion-title>
+    <ion-buttons slot="end">
+      <ion-badge color="primary" class="count-badge" data-testid="item-count">
+        {{ allItems.length }}
+      </ion-badge>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      data-testid="search-items"
+      [(ngModel)]="searchTerm"
+      (ionInput)="onSearch($event)"
+      placeholder="Search name or description"
+      debounce="150"
+      animated="true"
+    ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="page-shell">
+    <ion-segment
+      class="category-segment"
+      [value]="category"
+      (ionChange)="onSegmentChange($event)"
+      scrollable="true"
+    >
+      @for (option of categories; track option) {
+        <ion-segment-button
+          [value]="option"
+          [attr.data-testid]="'segment-' + option"
+        >
+          <ion-label>{{ option }}</ion-label>
+        </ion-segment-button>
+      }
+    </ion-segment>
+
+    <div class="list-meta">
+      <ion-text color="medium">
+        {{ filteredItems.length }} of {{ allItems.length }} items
+      </ion-text>
+      <ion-chip outline="true" color="medium" class="backend-chip">
+        <ion-icon name="server-outline"></ion-icon>
+        <ion-label>{{ backend === 'firebase' ? 'Firestore' : 'Local demo' }}</ion-label>
+      </ion-chip>
+    </div>
+
+    @if (filteredItems.length > 0) {
+      <ion-list class="item-list">
+        @for (item of filteredItems; track item.id) {
+          <ion-item-sliding>
+            <ion-item class="item-row" [attr.data-testid]="'item-row-' + item.id">
+              <ion-label>
+                <div class="title-line">
+                  <h2>{{ item.name }}</h2>
+                  <ion-badge [color]="item.available ? 'success' : 'medium'">
+                    {{ item.available ? 'Available' : 'Unavailable' }}
+                  </ion-badge>
+                </div>
+                <p>{{ item.description || 'No description yet.' }}</p>
+                <div class="meta-line">
+                  <ion-chip [color]="categoryColor(item.category)" class="category-chip">
+                    {{ item.category }}
+                  </ion-chip>
+                  <ion-text color="dark" class="price">
+                    {{ item.price | currency: 'PHP' : 'symbol-narrow' : '1.2-2' }}
+                  </ion-text>
+                </div>
+              </ion-label>
+              <ion-button
+                slot="end"
+                fill="clear"
+                data-testid="edit-item"
+                aria-label="Edit item"
+                (click)="openEdit(item)"
+              >
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option
+                color="danger"
+                data-testid="delete-item"
+                (click)="deleteItem(item)"
+              >
+                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        }
+      </ion-list>
+    } @else {
+      <div class="empty-state" data-testid="empty-state">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <h2>No items to show</h2>
+        @if (allItems.length === 0) {
+          <p>Add your first menu item from the Add tab.</p>
+        } @else {
+          <p>No item matches the current search or category filter.</p>
+        }
+      </div>
+    }
+  </div>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [color]="toastColor"
+    [duration]="2400"
+    position="bottom"
+    (didDismiss)="isToastOpen = false"
+  ></ion-toast>
+
+  <ion-loading
+    [isOpen]="isBusy"
+    message="Working..."
+    spinner="crescent"
+  ></ion-loading>
+</ion-content>
+
+<ion-modal
+  [isOpen]="isEditOpen"
+  [backdropDismiss]="false"
+  (didDismiss)="closeEdit()"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Edit item</ion-title>
+        <ion-buttons slot="end">
+          <ion-button aria-label="Close" (click)="closeEdit()">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding" data-testid="edit-modal">
+      @if (editing) {
+        <ion-list lines="none">
+          <ion-item>
+            <ion-input
+              data-testid="edit-name"
+              label="Name"
+              labelPlacement="stacked"
+              fill="outline"
+              [(ngModel)]="editing.name"
+              [class.ion-invalid]="!!editNameError"
+              [class.ion-touched]="editSubmitted"
+            ></ion-input>
+          </ion-item>
+          @if (editNameError) {
+            <ion-note color="danger">{{ editNameError }}</ion-note>
+          }
+
+          <ion-item>
+            <ion-select
+              data-testid="edit-category"
+              label="Category"
+              labelPlacement="stacked"
+              fill="outline"
+              interface="popover"
+              [(ngModel)]="editing.category"
+            >
+              @for (category of categories.slice(1); track category) {
+                <ion-select-option [value]="category">
+                  {{ category }}
+                </ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-input
+              data-testid="edit-price"
+              label="Price (PHP)"
+              labelPlacement="stacked"
+              fill="outline"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              [(ngModel)]="editing.price"
+              [class.ion-invalid]="!!editPriceError"
+              [class.ion-touched]="editSubmitted"
+            ></ion-input>
+          </ion-item>
+          @if (editPriceError) {
+            <ion-note color="danger">{{ editPriceError }}</ion-note>
+          }
+
+          <ion-item>
+            <ion-textarea
+              data-testid="edit-description"
+              label="Description"
+              labelPlacement="stacked"
+              fill="outline"
+              [autoGrow]="true"
+              [rows]="3"
+              [(ngModel)]="editing.description"
+            ></ion-textarea>
+          </ion-item>
+
+          <ion-item class="toggle-row">
+            <ion-toggle
+              data-testid="edit-available"
+              labelPlacement="start"
+              [(ngModel)]="editing.available"
+            >
+              Available today
+            </ion-toggle>
+          </ion-item>
+        </ion-list>
+      }
+
+      <ion-button
+        expand="block"
+        class="save-button"
+        data-testid="save-edit"
+        [disabled]="isBusy"
+        (click)="saveEdit()"
+      >
+        Save changes
+      </ion-button>
+      <ion-button expand="block" fill="clear" (click)="closeEdit()">
+        Cancel
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>

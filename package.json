@@ -1,0 +1,59 @@
+{
+  "name": "user-crud",
+  "version": "1.0.0",
+  "description": "ITE 413 Lab 4/6 - Ionic Angular CRUD with Firebase, Docker, and CI/CD",
+  "author": "Axel Josh",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --port 8100",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:ci": "ng test --watch=false",
+    "lint": "ng lint",
+    "e2e:smoke": "node scripts/e2e-smoke.mjs"
+  },
+  "private": true,
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "dependencies": {
+    "@angular/common": "22.2.5",
+    "@angular/compiler": "22.2.5",
+    "@angular/core": "22.2.5",
+    "@angular/forms": "22.2.5",
+    "@angular/platform-browser": "22.2.5",
+    "@angular/platform-browser-dynamic": "22.2.5",
+    "@angular/router": "22.2.5",
+    "@ionic/angular": "^9.0.0",
+    "firebase": "^13.3.0",
+    "ionicons": "^8.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "22.2.6",
+    "@angular/cli": "22.2.6",
+    "@angular/compiler-cli": "22.2.5",
+    "@angular/language-service": "22.2.5",
+    "@ionic/angular-toolkit": "^13.0.0",
+    "angular-eslint": "22.6.0",
+    "eslint": "^10.10.0",
+    "jsdom": "^31.0.0",
+    "playwright-core": "^1.65.0",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^5.1.0"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-win32-x64-msvc": "1.2.19"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "lmdb": true,
+    "msgpackr-extract": true,
+    "@parcel/watcher": true,
+    "@firebase/util@1.15.3": true,
+    "protobufjs@7.6.6": true
+  }
+}
