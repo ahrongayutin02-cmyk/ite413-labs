@@ -1,5 +1,6 @@
 import { firstValueFrom } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { MenuItemInput } from '../models/menu-item.model';
 import { MenuItemService } from './menu-item.service';
 
@@ -12,8 +13,25 @@ const SAMPLE: MenuItemInput = {
 };
 
 describe('MenuItemService (local demo mode)', () => {
+  const realConfig = environment.firebase;
+
   beforeEach(() => {
+    // These tests exercise the localStorage backend, so keep them
+    // deterministic even when the app points at a real Firestore project.
+    environment.firebase = {
+      apiKey: 'YOUR_API_KEY',
+      authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+      projectId: 'YOUR_PROJECT_ID',
+      storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+      messagingSenderId: 'YOUR_SENDER_ID',
+      appId: 'YOUR_APP_ID',
+      measurementId: 'G-YOUR_MEASUREMENT_ID',
+    };
     localStorage.clear();
+  });
+
+  afterAll(() => {
+    environment.firebase = realConfig;
   });
 
   it('starts in local mode and seeds demo rows', async () => {
