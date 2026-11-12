@@ -42,8 +42,8 @@ export class MenuItemService {
   private firestore: Firestore | null = null;
   private stopListener: (() => void) | null = null;
 
-  readonly backend: BackendMode;
-  readonly backendDetail: string;
+  backend: BackendMode;
+  backendDetail: string;
 
   readonly items$: Observable<MenuItem[]> = this.itemsSubject
     .asObservable()
@@ -180,6 +180,9 @@ export class MenuItemService {
         this.stopListener?.();
         this.stopListener = null;
         this.firestore = null;
+        this.backend = 'local';
+        this.backendDetail =
+          'localStorage demo mode (Firestore listener failed)';
         this.loadLocal();
       },
     );
@@ -187,10 +190,12 @@ export class MenuItemService {
 
   private loadLocal(): void {
     let items: MenuItem[] = [];
+    let hasStoredValue = false;
 
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
+      if (raw !== null) {
+        hasStoredValue = true;
         const parsed: unknown = JSON.parse(raw);
         if (Array.isArray(parsed)) {
           items = parsed as MenuItem[];
@@ -200,7 +205,9 @@ export class MenuItemService {
       console.warn('Stored menu items could not be read.', error);
     }
 
-    if (items.length === 0) {
+    // Seed only on first run. An intentionally empty list (after "delete all")
+    // must stay empty across reloads.
+    if (!hasStoredValue) {
       items = this.demoItems();
       this.persistLocal(items);
     }

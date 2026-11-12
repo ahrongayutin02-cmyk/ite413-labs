@@ -7,7 +7,10 @@ import {
   MenuCategory,
   MenuItemInput,
 } from '../models/menu-item.model';
-import { MenuItemService } from '../services/menu-item.service';
+import {
+  BackendMode,
+  MenuItemService,
+} from '../services/menu-item.service';
 
 @Component({
   selector: 'app-tab1',
@@ -20,7 +23,10 @@ export class Tab1Page {
   private readonly router = inject(Router);
 
   readonly categories = MENU_CATEGORIES;
-  readonly backend = this.menuItems.backend;
+
+  get backend(): BackendMode {
+    return this.menuItems.backend;
+  }
 
   form: MenuItemInput = { ...EMPTY_MENU_ITEM };
   submitted = false;

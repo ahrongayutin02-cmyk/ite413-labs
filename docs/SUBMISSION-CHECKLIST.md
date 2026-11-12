@@ -16,7 +16,7 @@
 - [x] Docker build/run helper: `scripts/verify-docker.ps1` / `.cmd`.
 - [x] GitHub Actions CI/CD workflow with Windows hosted CI and self-hosted CD.
 - [x] Deployable lab Firestore rules (`firebase.json`, `firestore.rules`).
-- [x] Unit tests: 7 files / 18 tests passing.
+- [x] Unit tests: 7 files / 19 tests passing.
 - [x] Lint passing.
 - [x] Production build passing.
 - [x] Real-browser CRUD smoke test passing, with screenshots in `docs/screenshots/`.

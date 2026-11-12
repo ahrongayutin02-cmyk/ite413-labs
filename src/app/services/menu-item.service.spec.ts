@@ -71,6 +71,15 @@ describe('MenuItemService (local demo mode)', () => {
     expect((await firstValueFrom(service.items$)).length).toBe(3);
   });
 
+  it('keeps an intentionally empty list empty after a reload', async () => {
+    const service = new MenuItemService();
+
+    await service.clearAll();
+
+    const reloaded = new MenuItemService();
+    expect((await firstValueFrom(reloaded.items$)).length).toBe(0);
+  });
+
   it('trims text and coerces the price before saving', async () => {
     const service = new MenuItemService();
 

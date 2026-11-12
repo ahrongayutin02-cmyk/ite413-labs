@@ -81,7 +81,7 @@ AngularFire)" note.
 | Check | Result |
 |---|---|
 | `npm run build` | Passed; bundle written to `www/` |
-| `npm run test:ci` | 7 files, **18 tests passed** |
+| `npm run test:ci` | 7 files, **19 tests passed** |
 | `npm run lint` | All files pass |
 | Browser smoke test | Create → read → search → update → delete passed in Chrome |
 

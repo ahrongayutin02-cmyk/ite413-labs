@@ -2,7 +2,10 @@ import { Component, inject } from '@angular/core';
 import { AlertController } from '@ionic/angular/lazy';
 import { map } from 'rxjs';
 
-import { MenuItemService } from '../services/menu-item.service';
+import {
+  BackendMode,
+  MenuItemService,
+} from '../services/menu-item.service';
 
 @Component({
   selector: 'app-tab3',
@@ -14,9 +17,15 @@ export class Tab3Page {
   private readonly menuItems = inject(MenuItemService);
   private readonly alertController = inject(AlertController);
 
-  readonly backend = this.menuItems.backend;
-  readonly backendDetail = this.menuItems.backendDetail;
   readonly itemCount$ = this.menuItems.items$.pipe(map((items) => items.length));
+
+  get backend(): BackendMode {
+    return this.menuItems.backend;
+  }
+
+  get backendDetail(): string {
+    return this.menuItems.backendDetail;
+  }
 
   isBusy = false;
   isToastOpen = false;

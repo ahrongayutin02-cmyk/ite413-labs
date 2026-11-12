@@ -48,7 +48,7 @@ Other commands:
 
 ```bash
 npm run lint       # ESLint + Angular template rules
-npm run test:ci    # 18 unit tests, no watch
+npm run test:ci    # 19 unit tests, no watch
 npm run build      # production bundle in www/
 npm run e2e:smoke  # real Chrome CRUD test + screenshots (server must be running)
 ```
@@ -138,7 +138,7 @@ The runner machine needs Docker Desktop running and the labels `self-hosted`,
 ## Verification performed on this machine
 
 - `npm run build` — production bundle generated in `www/`.
-- `npm run test:ci` — **7 test files, 18 tests passed**.
+- `npm run test:ci` — **7 test files, 19 tests passed**.
 - `npm run lint` — all files pass.
 - `npm run e2e:smoke` — real Chrome flow: create, search, update, delete,
   About tab, desktop layout. Screenshots are in

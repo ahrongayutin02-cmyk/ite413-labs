@@ -6,7 +6,10 @@ import {
   MenuCategory,
   MenuItem,
 } from '../models/menu-item.model';
-import { MenuItemService } from '../services/menu-item.service';
+import {
+  BackendMode,
+  MenuItemService,
+} from '../services/menu-item.service';
 
 type CategoryFilter = 'All' | MenuCategory;
 
@@ -20,7 +23,10 @@ export class Tab2Page implements OnInit, OnDestroy {
   private readonly menuItems = inject(MenuItemService);
 
   readonly categories: CategoryFilter[] = ['All', ...MENU_CATEGORIES];
-  readonly backend = this.menuItems.backend;
+
+  get backend(): BackendMode {
+    return this.menuItems.backend;
+  }
 
   allItems: MenuItem[] = [];
   filteredItems: MenuItem[] = [];
