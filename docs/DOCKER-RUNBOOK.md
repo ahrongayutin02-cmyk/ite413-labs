@@ -11,25 +11,22 @@ committed; the remaining work is the local Docker runtime.
 | `VirtualMachinePlatform` | Enabled |
 | `Microsoft-Windows-Subsystem-Linux` | Enabled on 13 Nov 2026 — **reboot required** |
 | WSL2 kernel / distro | Starts after the reboot |
-| Docker Desktop | Installer downloading (~595 MB) |
-| Free disk space | ~4 GB — free at least 2–3 GB more before building |
+| Docker Desktop 4.99.0 | Installed on 13 Nov 2026 (installer exit code 0) |
+| Free disk space | 5.79 GB |
+| Next action | Reboot Windows, then run `scripts\verify-docker.cmd -SmokeTest` |
 
-The Docker Desktop download is slow on this connection (about 50–70 KB/s). The
-elevated installer keeps running independently of the editor session. Check it
-with:
+The Docker Desktop installer has already run successfully and was deleted to
+recover 624 MB. `C:\Program Files\Docker\Docker\Docker Desktop.exe` exists and
+the `com.docker.service` service is registered. WSL2 still needs the reboot
+before the Linux engine can start.
 
-```powershell
-Get-Content "$env:TEMP\opencode\docker-install-2.log" -Tail 5
-Test-Path 'C:\Program Files\Docker\Docker\Docker Desktop.exe'
-```
-
-If the download is interrupted, resume it from an elevated PowerShell:
+If Docker Desktop ever needs to be reinstalled, download the current installer
+from <https://www.docker.com/products/docker-desktop/> and run it elevated:
 
 ```powershell
-curl.exe -L -C - -o "$env:TEMP\opencode\DockerDesktopInstaller.exe" `
-  'https://desktop.docker.com/win/main/amd64/245822/Docker%20Desktop%20Installer.exe'
-Start-Process "$env:TEMP\opencode\DockerDesktopInstaller.exe" `
-  -ArgumentList 'install','--quiet','--accept-license' -Verb RunAs -Wait
+Start-Process "$env:TEMP\DockerDesktopInstaller.exe" `
+  -ArgumentList 'install','--quiet','--accept-license','--backend=wsl-2' `
+  -Verb RunAs -Wait
 ```
 
 ## 1. Reboot Windows
@@ -152,7 +149,7 @@ records. Cloud data lives outside the container.
 | `npm ci` fails inside the build | Run `docker build --no-cache -t ionic-crud .` and read the first error. The lockfile and optional Rolldown binding are already configured for Linux. |
 | App does not load, container restarts | `docker logs ionic-crud-container`; the dev server needs 1–2 minutes on a cold start. |
 | Build runs out of disk space | `docker system df`, then free space or `docker system prune -f` (only if no other project needs the cache). |
-| Docker Desktop installer is slow | It is a 595 MB download; resume with the `curl -C -` command above. |
+| Docker Desktop installer exits with code 1 | Read `%LOCALAPPDATA%\Docker\log\host\DockerDesktopInstaller-*.log`. The 13 Nov failure was disk space: the installer needs 3.27 GB free. Free space, then rerun the elevated install command above. |
 
 ## 7. Cleanup
 

@@ -28,8 +28,8 @@
       `src/environments/environment.ts` (and `.prod.ts` for a production
       build), deploy the rules in `firestore.rules`, then take the
       Firestore-mode screenshots. See `docs/FIREBASE_SETUP.md`.
-- [ ] **Docker Desktop** — WSL2 features are enabled and the installer is
-      downloading; **reboot Windows**, start Docker Desktop, then run
+- [ ] **Docker Desktop** — 4.99.0 is installed (exit code 0); WSL2 features are
+      enabled. **Reboot Windows**, start Docker Desktop, then run
       `scripts\verify-docker.cmd -SmokeTest`. Record the image
       name/tag/id/size and take the screenshots listed in
       `docs/DOCKER-RUNBOOK.md`.

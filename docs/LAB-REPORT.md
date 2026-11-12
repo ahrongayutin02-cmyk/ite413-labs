@@ -150,9 +150,10 @@ Open <http://localhost:8100>. Record the image name, tag, image id, and size fro
 screenshot checklist, and troubleshooting steps are in
 [`DOCKER-RUNBOOK.md`](DOCKER-RUNBOOK.md).
 
-> **Verification status:** the Dockerfile and helper script are committed and
-> reviewed. The local build/run is the remaining step after the required WSL2
-> reboot; run `scripts\verify-docker.cmd` and attach the resulting screenshots.
+> **Verification status:** Docker Desktop 4.99.0 is installed and the Dockerfile
+> and helper script are committed and reviewed. The local build/run is the
+> remaining step after the required WSL2 reboot; run
+> `scripts\verify-docker.cmd -SmokeTest` and attach the resulting screenshots.
 
 ### 2.3 Container management
 
