@@ -76,6 +76,26 @@ deleteDoc(doc(db, 'menuItems', id));            // delete
 No AngularFire is used, matching the manual's "Firebase SDK v9+ (no
 AngularFire)" note.
 
+**Connected project (13 Nov 2026).** The app now uses the real `serverlena`
+web-app config committed in `src/environments/environment.ts` and
+`environment.prod.ts`:
+
+| Item | Value |
+|---|---|
+| Firebase project | `serverlena` |
+| Firestore database | `(default)`, Firestore Native, `asia-southeast1` (Singapore) |
+| Security rules | `firestore.rules` deployed to `cloud.firestore` |
+| Web app | `1:222955201733:web:8199a7e0422c10d8a47cac` |
+| Analytics | `G-KX52PX01BD` (optional) |
+
+The lab rules allow anonymous read/write on `menuItems` so the marker can open
+the app without signing in. They are intentionally open and must be replaced
+before any real deployment.
+
+Because Angular 22 runs **zoneless**, the async Firestore callbacks call
+`ChangeDetectorRef.markForCheck()`. Without it the `ion-loading` overlay and
+toasts would stay frozen after the first remote write.
+
 ### 1.5 Verification
 
 | Check | Result |
@@ -83,7 +103,7 @@ AngularFire)" note.
 | `npm run build` | Passed; bundle written to `www/` |
 | `npm run test:ci` | 7 files, **19 tests passed** |
 | `npm run lint` | All files pass |
-| Browser smoke test | Create → read → search → update → delete passed in Chrome |
+| Browser smoke test | Create → read → search → update → delete passed in Chrome **against real Firestore**; the collection was empty again afterwards |
 
 Screenshots (captured from the running app):
 
@@ -99,11 +119,9 @@ Screenshots (captured from the running app):
 | `docs/screenshots/08-about.png` | Backend status and deliverables |
 | `docs/screenshots/09-items-desktop.png` | Desktop layout |
 
-> The screenshots above were taken in **local demo mode**. To produce the
-> Firebase version for submission, paste a real config
-> (`docs/FIREBASE_SETUP.md`), restart the app, add an item, and take the same
-> screenshots with the **Firestore** chip visible and the document visible in
-> the Firebase console.
+> The screenshots above were taken in **Firestore mode** against the deployed
+> container: the app shows the **Firestore** chip and the CRUD flow writes to
+> the `serverlena` `menuItems` collection.
 
 ---
 
@@ -173,6 +191,10 @@ became healthy, and the browser CRUD smoke test passed against
 | HTTP check | `200 OK` |
 | CRUD smoke test | Passed (create, read, search, update, delete) |
 
+The self-hosted CD run later rebuilt and replaced this container. The current
+deployed image and container IDs, plus the browser test against them, are in
+[§3.4](#34-verified-pipeline-run-final).
+
 The exact captured command output is in
 [`LAB6-DOCKER-EVIDENCE.md`](LAB6-DOCKER-EVIDENCE.md). The Docker Desktop
 Containers view is captured in
@@ -222,7 +244,8 @@ startup errors.
 3. `docker build -t ionic-crud .`
 4. `docker rm -f ionic-crud ionic-crud-container` (allowed to fail on the first run).
 5. `docker run -d --name ionic-crud-container --restart unless-stopped -p 8100:8100 ionic-crud`
-6. Poll `http://localhost:8100/` for up to 60 seconds; on failure print
+6. Wait up to 5 minutes for the container health check to report `healthy`,
+   then request `http://localhost:8100/`. On failure print `docker ps -a` and
    `docker logs ionic-crud-container` and fail the job.
 
 The CD job only runs after CI succeeds and only for a push to `main`.
@@ -245,6 +268,42 @@ The CD job only runs after CI succeeds and only for a push to `main`.
 4. Wait for both jobs to finish, refresh <http://localhost:8100>, and confirm the
    change appears.
 5. Repeat with another visible change.
+
+### 3.4 Verified pipeline run (final)
+
+The zoneless-UI fix was pushed as commit `41e0208` and produced run
+[**43332501159**](https://github.com/ahrongayutin02-cmyk/ite413-labs/actions/runs/43332501159).
+Both jobs completed successfully:
+
+| Item | Value |
+|---|---|
+| Workflow run | `43332501159` — CI/CD Pipeline #6 |
+| Event / branch | `push` / `main` |
+| Commit | `41e0208` — fix(ui): refresh async Firestore state in zoneless change detection |
+| Started | 2026-11-12 23:52:44 UTC |
+| Total duration | 8m 50s |
+| CI job | `131580401188` — success, 1m 25s |
+| CD job | `131581036510` — success, 7m 18s (5m 16s spent in the health/HTTP verify step) |
+| Deployed image | `sha256:d5ac7f68571ed6997d0b627e9f731a678d060371a88a80238097e3d20d3d61b9` |
+| Image tag / size | `ionic-crud:latest` / 1.69 GB |
+| Container | `785f1fa3c60ea2ec4c632eed99f74c184c33e7288bff944927e01f45db886dca` |
+| Container status | `Up (healthy)`, `0.0.0.0:8100->8100/tcp` |
+| HTTP check | `200`, 873-byte app shell |
+| Browser smoke test | create → read → search → update → delete passed against the **deployed container**; Firestore `menuItems` was empty afterwards |
+
+Evidence screenshots:
+
+| File | Content |
+|---|---|
+| `docs/screenshots/12-github-actions-run.png` | Run summary: both jobs green, commit `41e0208` |
+| `docs/screenshots/13-github-actions-cd-job.png` | CD steps through **Verify app** |
+| `docs/screenshots/14-cd-deployed-app.png` | App served from the new container with the **Firestore** chip |
+
+An earlier pipeline run
+([`43326257360`](https://github.com/ahrongayutin02-cmyk/ite413-labs/actions/runs/43326257360))
+first proved the hosted-CI → self-hosted-CD path. The run above is the final
+one and includes the fix that makes async Firestore state render correctly in
+the zoneless Angular build.
 
 ---
 

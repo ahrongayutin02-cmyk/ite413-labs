@@ -30,9 +30,8 @@ The CRUD entity is a **MenuItem** for a restaurant menu (chosen for the Lab 4
 - **Delete** — swipe left on an item (`ion-item-sliding`) or delete all from the
   About tab with an `ion-alert` confirmation.
 - **Backend** — Firebase Firestore through the modular SDK (`onSnapshot`,
-  `addDoc`, `updateDoc`, `deleteDoc`) when a real web config is present;
-  otherwise a localStorage demo backend with seeded rows, so the app is usable
-  before Firebase is connected.
+  `addDoc`, `updateDoc`, `deleteDoc`). A localStorage demo backend with seeded
+  rows is kept as a fallback when the config is missing or still a placeholder.
 
 ## Quick start
 
@@ -58,13 +57,18 @@ CI/CD workflow.
 
 ## Connect Firebase (Lab 4)
 
-The app runs immediately in **local demo mode**. To use real Firestore:
+This project is already connected to the `serverlena` Firebase project. The web
+config is in `src/environments/environment.ts` and `environment.prod.ts`, the
+`(default)` Firestore database exists in `asia-southeast1`, and
+`firestore.rules` is deployed. The app badge reads **Firestore**.
+
+To point another copy at a different project:
 
 1. Create a Firebase project and a Web app in the Firebase Console.
 2. Enable **Cloud Firestore** (test mode is enough for the lab).
-3. Copy the web app config into `src/environments/environment.ts` (and
-   `environment.prod.ts` for a production build).
-4. Create the `menuItems` collection by adding the first item through the app.
+3. Replace the web app config in both environment files.
+4. Deploy the rules: `firebase deploy --only firestore:rules`.
+5. Create the `menuItems` collection by adding the first item through the app.
 
 Full steps, including the lab-only Firestore rules, are in
 [`docs/FIREBASE_SETUP.md`](docs/FIREBASE_SETUP.md).
@@ -122,7 +126,8 @@ The workflow has two jobs:
 2. **Continuous Deployment** on `[self-hosted, Windows, X64]`:
    checkout → `docker info` → `docker build -t ionic-crud .` → remove the old
    `ionic-crud`/`ionic-crud-container` container → run the new one as
-   `ionic-crud-container` on port 8100 → poll `http://localhost:8100/`.
+   `ionic-crud-container` on port 8100 → wait for the container health check
+   (up to 5 minutes) → request `http://localhost:8100/`.
 
 ### Register the self-hosted runner
 
@@ -148,6 +153,14 @@ The runner machine needs Docker Desktop running and the labels `self-hosted`,
   (1,691,417,380 bytes), container `ionic-crud-container` healthy on
   `8100:8100`, and the browser CRUD smoke test passed against the container.
   See [`docs/LAB6-DOCKER-EVIDENCE.md`](docs/LAB6-DOCKER-EVIDENCE.md).
+- CI/CD — run
+  [43332501159](https://github.com/ahrongayutin02-cmyk/ite413-labs/actions/runs/43332501159)
+  passed on commit `41e0208`: CI on `windows-latest` and CD on the self-hosted
+  runner both green, new container healthy on port 8100, and the CRUD smoke
+  test passed against the deployed container. Screenshots:
+  [`12-github-actions-run.png`](docs/screenshots/12-github-actions-run.png),
+  [`13-github-actions-cd-job.png`](docs/screenshots/13-github-actions-cd-job.png),
+  [`14-cd-deployed-app.png`](docs/screenshots/14-cd-deployed-app.png).
 
 ## Project structure
 

@@ -18,38 +18,41 @@
       container `ionic-crud-container` healthy, browser CRUD smoke test passed.
       Details: `docs/LAB6-DOCKER-EVIDENCE.md`.
 - [x] GitHub Actions CI/CD workflow with Windows hosted CI and self-hosted CD.
-- [x] Deployable lab Firestore rules (`firebase.json`, `firestore.rules`).
+- [x] Firestore database `(default)` created in `serverlena`
+      (Firestore Native, `asia-southeast1`) and `firestore.rules` deployed.
+- [x] Real Firebase web config committed in `environment.ts` / `environment.prod.ts`.
+- [x] GitHub repository <https://github.com/ahrongayutin02-cmyk/ite413-labs>
+      created and `main` pushed.
+- [x] Self-hosted runner `axeljosh-lab6-runner` online (Idle), labels
+      `self-hosted`, `Windows`, `X64`.
+- [x] CD pipeline passed and deployed the container; evidence in
+      `docs/screenshots/12-github-actions-run.png`,
+      `13-github-actions-cd-job.png`, and `14-cd-deployed-app.png`.
 - [x] Unit tests: 7 files / 19 tests passing.
 - [x] Lint passing.
 - [x] Production build passing.
 - [x] Real-browser CRUD smoke test passing, with screenshots in `docs/screenshots/`.
 - [x] Lab report, Firebase setup guide, and Docker runbook.
 
-## Needs your account / machine (cannot be completed by an agent)
+## Remaining manual items
 
-- [ ] **Firebase project** — create it, paste the web config into
-      `src/environments/environment.ts` (and `.prod.ts` for a production
-      build), deploy the rules in `firestore.rules`, then take the
-      Firestore-mode screenshots. See `docs/FIREBASE_SETUP.md`.
-- [ ] **Docker screenshots** — the runtime is verified; open Docker Desktop's
-      **Containers** view and take the GUI screenshot listed in
-      `docs/DOCKER-RUNBOOK.md` if your instructor requires it.
-- [ ] **GitHub repository** — create a repo, push `main`, and confirm the CI job
-      passes in the Actions tab.
-- [ ] **Self-hosted runner** — register it on the repository
-      (Settings → Actions → Runners), start `.\run.cmd`, confirm it is Idle with
-      labels `self-hosted`, `Windows`, `X64`.
-- [ ] **CD verification** — push a visible change to `main`, watch CI then CD,
-      refresh <http://localhost:8100>, and screenshot the updated app.
-- [ ] **Lab sheet answers** — Docker values are already captured in
-      `docs/LAB6-DOCKER-EVIDENCE.md`; add the workflow run URLs and runner name.
+- [ ] **Docker Desktop screenshot** (only if the instructor requires a GUI
+      screenshot): open Docker Desktop's **Containers** view and capture the
+      screen listed in `docs/DOCKER-RUNBOOK.md`. The runtime itself is verified.
+- [ ] **Lab sheet answers** — Docker values are in
+      `docs/LAB6-DOCKER-EVIDENCE.md`; workflow run URLs and the runner name are in
+      `docs/LAB-REPORT.md` → CI/CD.
 
-## Suggested commit sequence
+## Key commits on `main`
 
-```bash
-git add .
-git commit -m "feat(lab4): Ionic tabs CRUD with MenuItem model and Firebase"
-git commit -m "feat(lab6): add Dockerfile and container instructions"
-git commit -m "ci: add Windows CI and self-hosted Docker deployment"
-git push -u origin main
+```text
+41e0208 fix(ui): refresh async Firestore state in zoneless change detection
+9131919 ci: use Windows PowerShell on the self-hosted runner
+a75f8ab ci: wait for container health before verifying the deployment
+82934ea feat(firebase): connect Lab 4 to the serverlena web app config
+8da3bef feat: complete ITE 413 Lab 4, Lab 6, and CI/CD pipeline
 ```
+
+Earlier commits add the Docker runbook, Docker verification evidence, and the
+local demo-backend fixes. The repository is already pushed; no further commit
+sequence is required.

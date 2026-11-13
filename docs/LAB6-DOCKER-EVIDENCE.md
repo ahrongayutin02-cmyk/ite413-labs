@@ -2,6 +2,13 @@
 
 Captured on **13 Nov 2026** on `AXELJOSH` after the WSL2 reboot.
 
+> **Update after the CI/CD deployment (run `43332501159`).** The self-hosted
+> runner rebuilt and replaced the container, so the current deployment is:
+> image `sha256:d5ac7f68571ed6997d0b627e9f731a678d060371a88a80238097e3d20d3d61b9`,
+> container `785f1fa3c60ea2ec4c632eed99f74c184c33e7288bff944927e01f45db886dca`,
+> started `2026-11-12T23:55:51Z`, healthy, HTTP 200 on port 8100. The values
+> below document the earlier local Lab 6 build; both used the same Dockerfile.
+
 ## Environment
 
 | Item | Value |

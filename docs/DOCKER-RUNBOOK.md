@@ -120,6 +120,10 @@ docker image inspect ionic-crud --format "ID={{.Id}} Size={{.Size}}"
 | `docker build` duration | ~16 minutes (cold build) |
 | `docker run` / first response duration | ~65 seconds to healthy |
 
+> These values are from the first local build. The CI/CD pipeline later
+> rebuilt the image and replaced the container; the current IDs are recorded in
+> [`LAB-REPORT.md`](LAB-REPORT.md) → CI/CD → Verified pipeline run (final).
+
 Screenshots to add to the submission:
 
 1. Docker Desktop **Containers** view showing `ionic-crud-container` running.

@@ -1,8 +1,14 @@
 # Firebase setup (Lab 4)
 
-The app ships with placeholder Firebase values and runs in **local demo mode**
-(localStorage) until you replace them. The CRUD code path is already written
-against Firestore, so switching is a config-only change.
+> **Already connected.** This project is live against the `serverlena` Firebase
+> project; the web config is committed in `src/environments/environment.ts` and
+> `environment.prod.ts`, and `firestore.rules` is deployed. The app shows the
+> **Firestore** chip. Keep this guide for reference or to point a copy of the
+> project at a different Firebase project.
+
+The app supports placeholder Firebase values and falls back to **local demo
+mode** (localStorage) when they are present. The CRUD code path is already
+written against Firestore, so switching projects is a config-only change.
 
 ## 1. Create the project
 
