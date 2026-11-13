@@ -17,6 +17,8 @@
 - [x] Docker Desktop 4.99.0 + WSL2 active; image `ionic-crud:latest` built,
       container `ionic-crud-container` healthy, browser CRUD smoke test passed.
       Details: `docs/LAB6-DOCKER-EVIDENCE.md`.
+- [x] Docker Desktop **Containers** view screenshot
+      (`docs/screenshots/10-docker-containers.png`).
 - [x] GitHub Actions CI/CD workflow with Windows hosted CI and self-hosted CD.
 - [x] Firestore database `(default)` created in `serverlena`
       (Firestore Native, `asia-southeast1`) and `firestore.rules` deployed.
@@ -36,12 +38,9 @@
 
 ## Remaining manual items
 
-- [ ] **Docker Desktop screenshot** (only if the instructor requires a GUI
-      screenshot): open Docker Desktop's **Containers** view and capture the
-      screen listed in `docs/DOCKER-RUNBOOK.md`. The runtime itself is verified.
-- [ ] **Lab sheet answers** — Docker values are in
-      `docs/LAB6-DOCKER-EVIDENCE.md`; workflow run URLs and the runner name are in
-      `docs/LAB-REPORT.md` → CI/CD.
+- [ ] **Lab sheet answers** — copy the Docker values from
+      `docs/LAB6-DOCKER-EVIDENCE.md` and the workflow run URL / runner name from
+      `docs/LAB-REPORT.md` → CI/CD into the lab sheet.
 
 ## Key commits on `main`
 
